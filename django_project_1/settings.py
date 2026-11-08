@@ -40,6 +40,7 @@ INSTALLED_APPS = [
 
     # Сторонние библиотеки
     'rest_framework',
+    'django_filters',
 
     # Ваши приложения
     'users',
