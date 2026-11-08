@@ -1,3 +1,23 @@
-from django.shortcuts import render
+from rest_framework import generics
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.filters import OrderingFilter
 
-# Create your views here.
+from users.models import Payment
+from users.serializers import PaymentSerializer
+
+
+class PaymentListAPIView(generics.ListAPIView):
+    queryset = Payment.objects.all()
+    serializer_class = PaymentSerializer
+
+    # Подключаем бэкенды для фильтрации и сортировки
+    filter_backends = [DjangoFilterBackend, OrderingFilter]
+
+    # Поля, по которым разрешена фильтрация
+    filterset_fields = ('paid_course', 'paid_lesson', 'payment_method')
+
+    # Поля, по которым разрешена сортировка (ordering)
+    ordering_fields = ('payment_date',)
+
+    # Дефолтная сортировка (опционально, например, от новых к старым)
+    ordering = ('-payment_date',)
