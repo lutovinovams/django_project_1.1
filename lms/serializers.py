@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from lms.models import Course, Lesson
 
+
 class LessonSerializer(serializers.ModelSerializer):
     class Meta:
         model = Lesson
@@ -8,6 +9,16 @@ class LessonSerializer(serializers.ModelSerializer):
 
 
 class CourseSerializer(serializers.ModelSerializer):
+    # Поле для вывода количества уроков
+    lessons_count = serializers.SerializerMethodField()
+
+    # Вложенный сериализатор для вывода списка всех уроков курса
+    # Имя переменной 'lessons' должно строго совпадать с related_name в ForeignKey модели Lesson
+    lessons = LessonSerializer(many=True, read_only=True)
+
     class Meta:
         model = Course
-        fields = ('id', 'title', 'preview', 'description')
+        fields = ('id', 'title', 'preview', 'description', 'lessons_count', 'lessons')
+
+    def get_lessons_count(self, obj):
+        return obj.lessons.count()
