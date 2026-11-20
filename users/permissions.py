@@ -9,3 +9,7 @@ class IsModer(BasePermission):
     def has_permission(self, request, view):
         """Возвращает True, если пользователь принадлежит к группе 'moders'."""
         return request.user.groups.filter(name='moders').exists()
+
+    def has_object_permission(self, request, view, obj):
+        """Возвращает True на уровне объекта, если пользователь принадлежит к группе 'moders'."""
+        return self.has_permission(request, view)
