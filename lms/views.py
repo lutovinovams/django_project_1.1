@@ -3,6 +3,8 @@ from rest_framework import viewsets, generics
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from drf_spectacular.utils import extend_schema, inline_serializer
+from rest_framework import serializers
 
 from lms.models import Course, Lesson, Subscription
 from lms.paginators import CustomPagination
@@ -74,6 +76,24 @@ class SubscriptionAPIView(APIView):
 
     permission_classes = [IsAuthenticated]
 
+    @extend_schema(
+        summary='Управление подпиской на курс',
+        description='Создает подписку на курс для текущего пользователя, если её нет, или удаляет существующую.',
+        request=inline_serializer(
+            name='SubscriptionRequest',
+            fields={
+                'course_id': serializers.IntegerField(help_text='ID курса для подписки/отписки')
+            }
+        ),
+        responses={
+            200: inline_serializer(
+                name='SubscriptionResponse',
+                fields={
+                    'message': serializers.CharField()
+                }
+            )
+        }
+    )
     def post(self, *args, **kwargs):
         """Создает подписку на курс, если её нет, или удаляет существующую."""
         user = self.request.user
