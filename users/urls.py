@@ -6,6 +6,8 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from users.apps import UsersConfig
 from users.views import (
     PaymentListAPIView,
+    PaymentCreateAPIView,
+    PaymentStatusAPIView,
     UserCreateAPIView,
     UserListAPIView,
     UserRetrieveAPIView,
@@ -29,4 +31,6 @@ urlpatterns = [
 
     # Платежи (закрыты авторизацией)
     path('payments/', PaymentListAPIView.as_view(), name='payment-list'),
+    path('payments/create/', PaymentCreateAPIView.as_view(), name='payment-create'),
+    path('payments/status/<int:pk>/', PaymentStatusAPIView.as_view(), name='payment-status'),
 ]
